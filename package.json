@@ -1,0 +1,27 @@
+{
+  "name": "art-site",
+  "version": "0.0.1",
+  "description": "A website to upload and sell my art on",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"No Test Specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/alexisart/art-site.git"
+  },
+  "keywords": [
+    "art",
+    "site",
+    "website",
+    "sell",
+    "upload"
+  ],
+  "author": "Alexis",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/alexisart/art-site/issues"
+  },
+  "homepage": "https://github.com/alexisart/art-site#readme",
+  "private": true
+}
