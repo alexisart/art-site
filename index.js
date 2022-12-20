@@ -33,6 +33,7 @@ const server = http.createServer((req, res) => {
 			
 			console.log('Result: ' + JSON.stringify(result));
 			res.write("<!-- Will setup proper page generation later -->");
+			res.write("<meta name='viewport' content='width=device-width, initial-scale=1' />");
 			res.write("<body bgcolor='black'><p style='color: white;'>");
 			res.write('Result: ' + JSON.stringify(result));
 			res.write("</p></body>");
