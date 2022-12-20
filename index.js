@@ -32,7 +32,10 @@ const server = http.createServer((req, res) => {
 			if (err) throw err;
 			
 			console.log('Result: ' + JSON.stringify(result));
+			res.write("<!-- Will setup proper page generation later -->");
+			res.write("<body bgcolor='black'><p style='color: white;'>");
 			res.write('Result: ' + JSON.stringify(result));
+			res.write("</p></body>");
 // 			fs.createReadStream(result).pipe(res);
 			
 			res.end();
