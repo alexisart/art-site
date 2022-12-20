@@ -23,5 +23,8 @@
     "url": "https://github.com/alexisart/art-site/issues"
   },
   "homepage": "https://github.com/alexisart/art-site#readme",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "mysql": "^2.18.1"
+  }
 }
