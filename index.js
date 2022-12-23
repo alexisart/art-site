@@ -13,11 +13,14 @@ const port = 8080;
 // Variables
 var mysql = require('mysql');
 
-var con = mysql.createConnection({
+// Pool because https://stackoverflow.com/a/37326025
+var con = mysql.createPool({
+//   connectionLimit: 10,
   host: process.env.DB_HOST,
   user: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME
+  database: process.env.DB_NAME,
+  debug: false
 });
 
 const server = http.createServer((req, res) => {
