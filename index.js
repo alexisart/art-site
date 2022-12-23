@@ -14,7 +14,7 @@ const port = 8080;
 var mysql = require('mysql');
 
 // Pool because https://stackoverflow.com/a/37326025
-var con = mysql.createPool({
+var pool = mysql.createPool({
 //   connectionLimit: 10,
   host: process.env.DB_HOST,
   user: process.env.DB_USERNAME,
@@ -30,23 +30,25 @@ const server = http.createServer((req, res) => {
 	res.setHeader('Content-Type', 'text/html');
 	
 	var sql = "show databases;";
-	con.query(sql, function (err, result, fields) {
-		try {
-			if (err) throw err;
-			
-			console.log('Result: ' + JSON.stringify(result));
-			res.write("<!-- Will setup proper page generation later -->");
-			res.write("<meta name='viewport' content='width=device-width, initial-scale=1' />");
-			res.write("<body bgcolor='black'><p style='color: white;'>");
-			res.write('Result: ' + JSON.stringify(result));
-			res.write("</p></body>");
-// 			fs.createReadStream(result).pipe(res);
-			
-			res.end();
-		} catch (err) {
-			console.error("Failed To Execute Query! " + err);
-// 			process.exit(1);
-		}
+	pool.getConnection(function(err, con) {
+		con.query(sql, function (err, result, fields) {
+			try {
+				if (err) throw err;
+				
+				console.log('Result: ' + JSON.stringify(result));
+				res.write("<!-- Will setup proper page generation later -->");
+				res.write("<meta name='viewport' content='width=device-width, initial-scale=1' />");
+				res.write("<body bgcolor='black'><p style='color: white;'>");
+				res.write('Result: ' + JSON.stringify(result));
+				res.write("</p></body>");
+	// 			fs.createReadStream(result).pipe(res);
+				
+				res.end();
+			} catch (err) {
+				console.error("Failed To Execute Query! " + err);
+	// 			process.exit(1);
+			}
+		});
 	});
 	
 // 	res.end();
@@ -83,7 +85,7 @@ function startDatabase() {
 		process.exit(1);
 	}
 	
-	con.connect(function(err) {
+	pool.getConnection(function(err, con) {
 		try {
 			if (err) throw err;
 				
