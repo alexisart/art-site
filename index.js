@@ -36,11 +36,20 @@ const server = http.createServer((req, res) => {
 				if (err) throw err;
 				
 				console.log('Result: ' + JSON.stringify(result));
+				
+				res.write("<!DOCTYPE html>");
+				res.write("<html><head>");
+				res.write('<meta charset="UTF-8">');
 				res.write("<!-- Will setup proper page generation later -->");
 				res.write("<meta name='viewport' content='width=device-width, initial-scale=1' />");
+				res.write("<!-- As of the time of writing, all art is All Rights Reserved. ");
+				res.write("This means both humans and ai are not allowed to reuse my images. ");
+				res.write("This may change in the future. -->");
+				res.write('<meta name="robots" content="noai, noimageai">');
+				res.write("</head>");
 				res.write("<body bgcolor='black'><p style='color: white;'>");
 				res.write('Result: ' + JSON.stringify(result));
-				res.write("</p></body>");
+				res.write("</p></body></html>");
 	// 			fs.createReadStream(result).pipe(res);
 				
 				res.end();
