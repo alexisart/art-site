@@ -46,6 +46,18 @@ const server = http.createServer((req, res) => {
 				res.write("This means both humans and ai are not allowed to reuse my images. ");
 				res.write("This may change in the future. -->");
 				res.write('<meta name="robots" content="noai, noimageai">');
+				
+				// Google Analytics
+				// process.env.GA_ID is public knowledge, I just want to separate the id between dev and production
+				res.write('<script async src="https://www.googletagmanager.com/gtag/js?id=' + process.env.GA_ID + '"></script>');
+				res.write('<script>');
+				res.write('  window.dataLayer = window.dataLayer || [];');
+				res.write('  function gtag(){dataLayer.push(arguments);}');
+				res.write("  gtag('js', new Date());");
+				res.write("  gtag('config', '" + process.env.GA_ID + "');");
+				res.write('</script>');
+				// ---
+				
 				res.write("</head>");
 				res.write("<body bgcolor='black'><p style='color: white;'>");
 				res.write('Result: ' + JSON.stringify(result));
