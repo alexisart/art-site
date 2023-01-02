@@ -29,14 +29,21 @@ const server = http.createServer((req, res) => {
 	res.statusCode = 200;
 	res.setHeader('Content-Type', 'text/html');
 	
-	var sql = "show databases;";
+	var sql = "select * from sellables;";
 	pool.getConnection(function(err, con) {
 		con.query(sql, function (err, result, fields) {
 			try {
 				if (err) throw err;
 				
-				console.log('Result: ' + JSON.stringify(result));
+				// Debug
+// 				console.log('Result: ');
+// 				result.forEach(function(element, index, array) {
+// 					console.log(JSON.stringify(element));
+// 				});
+				  
+// 				console.log('Result: ' + JSON.stringify(result));
 				
+				// TODO: Implement CSS Stylesheet
 				res.write("<!DOCTYPE html>");
 				res.write("<html><head>");
 				res.write('<meta charset="UTF-8">');
@@ -60,7 +67,17 @@ const server = http.createServer((req, res) => {
 				
 				res.write("</head>");
 				res.write("<body bgcolor='black'><p style='color: white;'>");
-				res.write('Result: ' + JSON.stringify(result));
+				
+				// For Printing The Results.
+				// TODO: Cleanup
+				res.write("<table style='color: white; border: 1px solid red; width: 100%; border-collapse: collapse;'>");
+				res.write("<tr style='border: 1px solid red'><th>Piece</th><th>Company</th><th>Product</th><th>Product ID</th></tr>");
+				result.forEach(function(element, index, array) {
+					// piece, company, product, product_id
+					res.write("<tr style='border: 1px dotted red'><td style='border-right: 1px dashed red'>" + element["piece"] + "</td><td style='border-left: 1px dashed red; border-right: 1px dashed red'>" + element["company"] + "</td><td style='border-left: 1px dashed red; border-right: 1px dashed red'>" + element["product"] + "</td><td style='border-left: 1px dashed red'>" + element["product_id"] + "</td></tr>");
+				});
+				res.write("</table>");
+				
 				res.write("</p></body></html>");
 	// 			fs.createReadStream(result).pipe(res);
 				
