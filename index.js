@@ -102,6 +102,8 @@ const server = http.createServer((req, res) => {
 						res.write("<a href='https://www.spoonflower.com/en/fabric/" + element["product_id"] + "'>" + element["product_id"] + "</a>");
 					else if (element["company"] == "redbubble") // TODO: Get actual product instead of forcing it to be stickers
 						res.write("<a href='https://www.redbubble.com/i/x/x/" + element["product_id"] + ".OP1U7'>" + element["product_id"] + "</a>");
+					else if (element["company"] == "guilded" && element["product"] == "artgroup")
+						res.write("<a href='https://www.guilded.gg/Alexis-Art/groups/DkxYegJd/channels/e03fecfa-f21b-43da-a11f-d9858c7afe33/media/" + element["product_id"] + "'>" + element["product_id"] + "</a>");
 					else
 						res.write(element["product_id"]);
 					
