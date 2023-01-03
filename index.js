@@ -74,7 +74,38 @@ const server = http.createServer((req, res) => {
 				res.write("<tr style='border: 1px solid red'><th>Piece</th><th>Company</th><th>Product</th><th>Product ID</th></tr>");
 				result.forEach(function(element, index, array) {
 					// piece, company, product, product_id
-					res.write("<tr style='border: 1px dotted red'><td style='border-right: 1px dashed red'>" + element["piece"] + "</td><td style='border-left: 1px dashed red; border-right: 1px dashed red'>" + element["company"] + "</td><td style='border-left: 1px dashed red; border-right: 1px dashed red'>" + element["product"] + "</td><td style='border-left: 1px dashed red'>" + element["product_id"] + "</td></tr>");
+					
+					// Hide Hidden Products
+					if (element["hidden"] == 1)
+						return;
+					
+					if (element["company"] == "redbubble") {
+						if (element["product"] != "transparent_sticker")
+							return;
+					}
+					
+					if (element["company"] == "spoonflower") {
+						if (element["product"] != "fabric")
+							return;
+					}
+					
+					res.write("<tr style='border: 1px dotted red'><td style='border-right: 1px dashed red'>" + element["piece"] + "</td><td style='border-left: 1px dashed red; border-right: 1px dashed red'>" + element["company"] + "</td><td style='border-left: 1px dashed red; border-right: 1px dashed red'>" + element["product"] + "</td><td style='border-left: 1px dashed red'>");
+					
+					// Testing Link Generation
+					if (element["company"] == "deviantart")
+						res.write("<a href='https://www.deviantart.com/x/art/" + element["product_id"] + "'>" + element["product_id"] + "</a>");
+					else if (element["company"] == "flickr")
+						res.write("<a href='https://www.flickr.com/photos/alexis_art/" + element["product_id"] + "'>" + element["product_id"] + "</a>");
+					else if (element["company"] == "printerstudio")
+						res.write("<a href='https://www.printerstudio.com/sell/designs/" + element["product_id"] + ".html'>" + element["product_id"] + "</a>");
+					else if (element["company"] == "spoonflower") // TODO: Get actual product instead of forcing it to be fabric
+						res.write("<a href='https://www.spoonflower.com/en/fabric/" + element["product_id"] + "'>" + element["product_id"] + "</a>");
+					else if (element["company"] == "redbubble") // TODO: Get actual product instead of forcing it to be stickers
+						res.write("<a href='https://www.redbubble.com/i/x/x/" + element["product_id"] + ".OP1U7'>" + element["product_id"] + "</a>");
+					else
+						res.write(element["product_id"]);
+					
+					res.write("</td></tr>");
 				});
 				res.write("</table>");
 				
