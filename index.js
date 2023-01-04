@@ -27,7 +27,8 @@ const server = http.createServer((req, res) => {
     console.log('Request for ' + req.url + ' by method ' + req.method);
 	
 	if (req.url == "/")
-		sendIndex(req, res);
+// 		sendIndex(req, res);
+		send404(req, res);
 	else if (req.url == "/main.css")
 		send404(req, res);
 	else if (req.url == "/print.css")
@@ -38,51 +39,34 @@ const server = http.createServer((req, res) => {
 
 
 // Functions
-function sendHTMLHeader(req, res) {
+function sendPage(req, res) {
 	// TODO: Replace With Template File
 	// TODO: Implement CSS Stylesheet
-	res.write("<!DOCTYPE html>");
-	res.write("<html><head>");
-	res.write('<meta charset="UTF-8">');
-	res.write("<!-- Will setup proper page generation later -->");
-	res.write("<meta name='viewport' content='width=device-width, initial-scale=1' />");
-	res.write("<!-- As of the time of writing, all art is All Rights Reserved. ");
-	res.write("This means both humans and ai are not allowed to reuse my images. ");
-	res.write("This may change in the future. -->");
-	res.write('<meta name="robots" content="noai, noimageai">');
-	
-	// Google Analytics
-	// process.env.GA_ID is public knowledge, I just want to separate the id between dev and production
-	res.write('<script async src="https://www.googletagmanager.com/gtag/js?id=' + process.env.GA_ID + '"></script>');
-	res.write('<script>');
-	res.write('  window.dataLayer = window.dataLayer || [];');
-	res.write('  function gtag(){dataLayer.push(arguments);}');
-	res.write("  gtag('js', new Date());");
-	res.write("  gtag('config', '" + process.env.GA_ID + "');");
-	res.write('</script>');
-	// ---
-	
-	res.write("</head>");
-	res.write("<body bgcolor='black'>");
-}
+// 	req.flushHeaders(); // Send headers out now
 
-function sendHTMLFooter(req, res) {
-	// TODO: Replace With Template File
-	res.write("</body></html>");
-// 	fs.createReadStream(result).pipe(res);
+	var stream = fs.createReadStream('template/page.html');
 	
-	res.end();
+	const chunks = [];
+	stream.on("data", function (chunk) {
+		chunks.push(chunk);
+	});
+
+	// Send the buffer or you can put it into a var
+	stream.on("end", function () {
+		console.log("Test");
+		res.write(Buffer.concat(chunks));
+	});
+	
+// 	res.end();
 }
 
 function send404(req, res) {
 	res.statusCode = 404;
 	res.setHeader('Content-Type', 'text/html');
 	
-	sendHTMLHeader(req, res);
+	sendPage(req, res);
 
 	res.write("<h1 style='color: white;'>404 - Page Not Found</h1>");
-	
-	sendHTMLFooter(req, res);
 }
 
 function sendIndex(req, res) {
@@ -103,7 +87,7 @@ function sendIndex(req, res) {
 				  
 // 				console.log('Result: ' + JSON.stringify(result));
 				
-				sendHTMLHeader(req, res);
+				sendPage(req, res);
 				
 				// For Printing The Results.
 				// TODO: Cleanup
@@ -147,8 +131,6 @@ function sendIndex(req, res) {
 					res.write("</td></tr>");
 				});
 				res.write("</table>");
-				
-				sendHTMLFooter(req, res);
 			} catch (err) {
 				console.error("Failed To Execute Query! " + err);
 	// 			process.exit(1);
