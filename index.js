@@ -27,8 +27,7 @@ const server = http.createServer((req, res) => {
     console.log('Request for ' + req.url + ' by method ' + req.method);
 	
 	if (req.url == "/")
-// 		sendIndex(req, res);
-		send404(req, res);
+		sendIndex(req, res);
 	else if (req.url == "/main.css")
 		send404(req, res);
 	else if (req.url == "/print.css")
@@ -39,7 +38,7 @@ const server = http.createServer((req, res) => {
 
 
 // Functions
-function sendPage(req, res) {
+function sendPage(req, res, content) {
 	// TODO: Replace With Template File
 	// TODO: Implement CSS Stylesheet
 // 	req.flushHeaders(); // Send headers out now
@@ -53,20 +52,24 @@ function sendPage(req, res) {
 
 	// Send the buffer or you can put it into a var
 	stream.on("end", function () {
-		console.log("Test");
-		res.write(Buffer.concat(chunks));
+		var body = chunks.toString("utf8").replace(new RegExp("{GOOGLE_ANALTICS_ID}", 'g'), process.env.GA_ID)
+									.replace("{HTML_BODY}", content.join('')); // Always make sure to keep user data last to prevent injection
+		
+		res.write(body);
+		res.end();
 	});
-	
-// 	res.end();
 }
 
 function send404(req, res) {
 	res.statusCode = 404;
 	res.setHeader('Content-Type', 'text/html');
 	
-	sendPage(req, res);
-
-	res.write("<h1 style='color: white;'>404 - Page Not Found</h1>");
+	
+	const content = [];
+	content.push("<h1 style='color: white;'>404 - Page Not Found</h1>");
+	content.push('test');
+	
+	sendPage(req, res, content);
 }
 
 function sendIndex(req, res) {
@@ -87,12 +90,12 @@ function sendIndex(req, res) {
 				  
 // 				console.log('Result: ' + JSON.stringify(result));
 				
-				sendPage(req, res);
+				const content = [];
 				
 				// For Printing The Results.
 				// TODO: Cleanup
-				res.write("<table style='color: white; border: 1px solid red; width: 100%; border-collapse: collapse;'>");
-				res.write("<tr style='border: 1px solid red'><th>Piece</th><th>Company</th><th>Product</th><th>Product ID</th></tr>");
+				content.push("<table style='color: white; border: 1px solid red; width: 100%; border-collapse: collapse;'>");
+				content.push("<tr style='border: 1px solid red'><th>Piece</th><th>Company</th><th>Product</th><th>Product ID</th></tr>");
 				result.forEach(function(element, index, array) {
 					// piece, company, product, product_id
 					
@@ -110,27 +113,29 @@ function sendIndex(req, res) {
 							return;
 					}
 					
-					res.write("<tr style='border: 1px dotted red'><td style='border-right: 1px dashed red'>" + element["piece"] + "</td><td style='border-left: 1px dashed red; border-right: 1px dashed red'>" + element["company"] + "</td><td style='border-left: 1px dashed red; border-right: 1px dashed red'>" + element["product"] + "</td><td style='border-left: 1px dashed red'>");
+					content.push("<tr style='border: 1px dotted red'><td style='border-right: 1px dashed red'>" + element["piece"] + "</td><td style='border-left: 1px dashed red; border-right: 1px dashed red'>" + element["company"] + "</td><td style='border-left: 1px dashed red; border-right: 1px dashed red'>" + element["product"] + "</td><td style='border-left: 1px dashed red'>");
 					
 					// Testing Link Generation
 					if (element["company"] == "deviantart")
-						res.write("<a href='https://www.deviantart.com/x/art/" + element["product_id"] + "'>" + element["product_id"] + "</a>");
+						content.push("<a href='https://www.deviantart.com/x/art/" + element["product_id"] + "'>" + element["product_id"] + "</a>");
 					else if (element["company"] == "flickr")
-						res.write("<a href='https://www.flickr.com/photos/alexis_art/" + element["product_id"] + "'>" + element["product_id"] + "</a>");
+						content.push("<a href='https://www.flickr.com/photos/alexis_art/" + element["product_id"] + "'>" + element["product_id"] + "</a>");
 					else if (element["company"] == "printerstudio")
-						res.write("<a href='https://www.printerstudio.com/sell/designs/" + element["product_id"] + ".html'>" + element["product_id"] + "</a>");
+						content.push("<a href='https://www.printerstudio.com/sell/designs/" + element["product_id"] + ".html'>" + element["product_id"] + "</a>");
 					else if (element["company"] == "spoonflower") // TODO: Get actual product instead of forcing it to be fabric
-						res.write("<a href='https://www.spoonflower.com/en/fabric/" + element["product_id"] + "'>" + element["product_id"] + "</a>");
+						content.push("<a href='https://www.spoonflower.com/en/fabric/" + element["product_id"] + "'>" + element["product_id"] + "</a>");
 					else if (element["company"] == "redbubble") // TODO: Get actual product instead of forcing it to be stickers
-						res.write("<a href='https://www.redbubble.com/i/x/x/" + element["product_id"] + ".OP1U7'>" + element["product_id"] + "</a>");
+						content.push("<a href='https://www.redbubble.com/i/x/x/" + element["product_id"] + ".OP1U7'>" + element["product_id"] + "</a>");
 					else if (element["company"] == "guilded" && element["product"] == "artgroup")
-						res.write("<a href='https://www.guilded.gg/Alexis-Art/groups/DkxYegJd/channels/e03fecfa-f21b-43da-a11f-d9858c7afe33/media/" + element["product_id"] + "'>" + element["product_id"] + "</a>");
+						content.push("<a href='https://www.guilded.gg/Alexis-Art/groups/DkxYegJd/channels/e03fecfa-f21b-43da-a11f-d9858c7afe33/media/" + element["product_id"] + "'>" + element["product_id"] + "</a>");
 					else
-						res.write(element["product_id"]);
+						content.push(element["product_id"]);
 					
-					res.write("</td></tr>");
+					content.push("</td></tr>");
 				});
-				res.write("</table>");
+				content.push("</table>");
+				
+				sendPage(req, res, content);
 			} catch (err) {
 				console.error("Failed To Execute Query! " + err);
 	// 			process.exit(1);
@@ -138,7 +143,6 @@ function sendIndex(req, res) {
 		});
 	});
 	
-// 	res.end();
 }
 
 function setupDatabase() {
