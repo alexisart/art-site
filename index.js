@@ -1,3 +1,5 @@
+// TODO: Determine cause of server occasionally freezing!!!
+
 // Imports
 const http = require('http');
 const fs = require('fs');
@@ -143,7 +145,7 @@ function sendIndex(req, res) {
 				// For Printing The Results.
 				// TODO: Cleanup
 				content.push("<table>");
-				content.push("<tr class='first'><th>Piece</th><th>Company</th><th>Product</th><th>Product ID</th></tr>");
+				content.push("<thead><tr class='first'><th>Piece</th><th>Company</th><th>Product</th><th>Product ID</th></tr></thead><tbody>");
 				result.forEach(function(element, index, array) {
 					// piece, company, product, product_id
 					
@@ -181,7 +183,7 @@ function sendIndex(req, res) {
 					
 					content.push("</td></tr>");
 				});
-				content.push("</table>");
+				content.push("</tbody></table>");
 				
 				sendPage(req, res, content);
 			} catch (err) {

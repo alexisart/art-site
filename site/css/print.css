@@ -1,21 +1,30 @@
 /* TODO: Determine Why Table Border Is Not Visible On Print Preview On Firefox. It is visible in final print though */
-/* TODO: Figure out how to put page numbers, margin on table splits, and repeat header row on table splits */
+/* TODO: Figure out how to put page numbers and margin on table splits */
 
 /* Body */
 body {
-	background: white;
+/* 	background: red; */
+
+	/* TODO: Determine If Needed */
+/* 	background: white; */
 }
 
 /* Table */
 table {
-	color: black;
+	/* TODO: Determine If Needed */
+/* 	background: black; */
+
 	border: 1px solid gray;
 	width: 100%;
 	border-collapse: collapse;
 	page-break-inside: auto;
+	
+	/* TODO: Test Look */
+	empty-cells: hide;
 }
 
-tr {
+thead { /* tr { */
+	/* Page Break Rules May Not Be Needed With Thead: https://www.w3.org/TR/CSS22/tables.html */
 	page-break-inside: avoid;
 	page-break-after: auto;
 }
@@ -44,7 +53,7 @@ td:last-of-type {
 
 /* 404 Page */
 h1.notfoundheader {
-	color: black;
+/* 	color: black; */
 }
 
 /* Links */
@@ -71,11 +80,14 @@ body::after {
 /* Print Specific CSS */
 @page {
 	size: auto;
-	/*margin: 0;*/
-	margin-top: 20px;
-	margin-bottom: 0;
+	margin: 0;
+
+	/* Used For Padding For Printer */
+	margin-top: 16px;
+	margin-bottom: 16px;
 }
 
+/* This doesn't exist. https://www.w3.org/TR/css-page-3/
 @top-right {
 	content: "Page " counter(page);
-}
+}*/
