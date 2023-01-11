@@ -1,0 +1,32 @@
+body {
+	background: black;
+}
+
+table {
+	color: white;
+	border: 1px solid red;
+	width: 100%;
+	border-collapse: collapse;
+}
+
+tr.first { /* tr:has(> th) { */
+	border: 1px solid red;
+}
+
+tr:not(tr.first) { /* :has(> td) { */
+	border: 1px dotted red;
+}
+
+td:first-of-type {
+	border-right: 1px dashed red;
+}
+
+/* Only one of these is needed to set the same border */
+td:not(:first-of-type, :last-of-type) {
+	border-left: 1px dashed red;
+	border-right: 1px dashed red;
+}
+
+td:last-of-type {
+	border-left: 1px dashed red;
+}

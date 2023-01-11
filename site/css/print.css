@@ -1,0 +1,38 @@
+body {
+	background: white;
+}
+
+table {
+	color: black;
+	border: 1px solid gray;
+	width: 100%;
+	border-collapse: collapse;
+}
+
+tr.first { /* tr:has(> th) { */
+	border: 1px solid gray;
+}
+
+tr:not(tr.first) { /* :has(> td) { */
+	border: 1px dotted gray;
+}
+
+td:first-of-type {
+	border-right: 1px dashed gray;
+}
+
+/* Only one of these is needed to set the same border */
+td:not(:first-of-type, :last-of-type) {
+	border-left: 1px dashed gray;
+	border-right: 1px dashed gray;
+}
+
+td:last-of-type {
+	border-left: 1px dashed gray;
+}
+
+/* Print Specific CSS */
+@page {
+	size: auto;
+	margin: 0;
+}

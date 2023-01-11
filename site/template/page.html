@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta charset="UTF-8">
-		<!-- Will setup proper page generation later -->
+		<meta charset="UTF-8" />
 		<meta name='viewport' content='width=device-width, initial-scale=1' />
-		<!-- As of the time of writing, all art is All Rights Reserved. 
-		This means both humans and ai are not allowed to reuse my images. 
-		This may change in the future. -->
-		<meta name="robots" content="noai, noimageai">
+		
+		<!-- As of the time of writing, all art is All Rights Reserved. This means both humans and ai are not allowed to reuse my images. This may change in the future. -->
+		<meta name="robots" content="noai, noimageai" />
+		
+		<!-- Stylesheets -->
+		<link rel="stylesheet" media="screen" href="web.css" />
+		<link rel="stylesheet" media="print" href="print.css" />
 
+		<!-- Manifest -->
+		<link rel="manifest" href="manifest.json" />
+		
 		<!-- TODO: Implement Cookie Consent -->
 		<!--<script async src="https://www.googletagmanager.com/gtag/js?id={GOOGLE_ANALTICS_ID}"></script>
 		<script>
@@ -18,7 +23,7 @@
 			gtag('config', '{GOOGLE_ANALTICS_ID}');
 		</script>-->
 	</head>
-	<body bgcolor='black'>
+	<body>
 		{HTML_BODY}
 	</body>
 </html>

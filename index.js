@@ -28,22 +28,43 @@ const server = http.createServer((req, res) => {
 	
 	if (req.url == "/")
 		sendIndex(req, res);
-	else if (req.url == "/main.css")
-		send404(req, res);
+	else if (req.url == "/web.css")
+		sendFile(req, res, "web.css", "text/css", "css");
 	else if (req.url == "/print.css")
-		send404(req, res);
+		sendFile(req, res, "print.css", "text/css", "css");
+	else if (req.url == "/manifest.json")
+		sendFile(req, res, "manifest.json", "application/manifest+json", "manifests");
 	else
 		send404(req, res);
 });
 
 
 // Functions
-function sendPage(req, res, content) {
-	// TODO: Replace With Template File
-	// TODO: Implement CSS Stylesheet
+function sendFile(req, res, file, mime, folder) {
+	res.statusCode = 200;
+	res.setHeader('Content-Type', mime);
 // 	req.flushHeaders(); // Send headers out now
 
-	var stream = fs.createReadStream('template/page.html');
+	var stream = fs.createReadStream(path.join('site', folder, file));
+	
+	const chunks = [];
+	stream.on("data", function (chunk) {
+		chunks.push(chunk);
+	});
+
+	// Send the buffer or you can put it into a var
+	stream.on("end", function () {
+		var body = chunks.toString("utf8")
+		
+		res.write(body);
+		res.end();
+	});
+}
+
+function sendPage(req, res, content) {
+// 	req.flushHeaders(); // Send headers out now
+
+	var stream = fs.createReadStream(path.join('site', 'template', 'page.html'));
 	
 	const chunks = [];
 	stream.on("data", function (chunk) {
@@ -94,8 +115,8 @@ function sendIndex(req, res) {
 				
 				// For Printing The Results.
 				// TODO: Cleanup
-				content.push("<table style='color: white; border: 1px solid red; width: 100%; border-collapse: collapse;'>");
-				content.push("<tr style='border: 1px solid red'><th>Piece</th><th>Company</th><th>Product</th><th>Product ID</th></tr>");
+				content.push("<table>");
+				content.push("<tr class='first'><th>Piece</th><th>Company</th><th>Product</th><th>Product ID</th></tr>");
 				result.forEach(function(element, index, array) {
 					// piece, company, product, product_id
 					
@@ -113,7 +134,7 @@ function sendIndex(req, res) {
 							return;
 					}
 					
-					content.push("<tr style='border: 1px dotted red'><td style='border-right: 1px dashed red'>" + element["piece"] + "</td><td style='border-left: 1px dashed red; border-right: 1px dashed red'>" + element["company"] + "</td><td style='border-left: 1px dashed red; border-right: 1px dashed red'>" + element["product"] + "</td><td style='border-left: 1px dashed red'>");
+					content.push("<tr><td>" + element["piece"] + "</td><td>" + element["company"] + "</td><td>" + element["product"] + "</td><td>");
 					
 					// Testing Link Generation
 					if (element["company"] == "deviantart")
