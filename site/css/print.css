@@ -83,6 +83,7 @@ body::after {
 	margin: 0;
 
 	/* Used For Padding For Printer */
+	/* TODO: Determine Cause Of Margin Top Cutting Off Table Top In Firefox Pages 2+ */
 	margin-top: 16px;
 	margin-bottom: 16px;
 }
