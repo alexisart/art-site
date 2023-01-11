@@ -1,1 +1,38 @@
-{}
+{
+	"$schema": "https://json.schemastore.org/web-manifest-combined.json",
+	"name": "Alexis' Art",
+	"short_name": "Art",
+	"start_url": "/?utm_source=pwa&utm_medium=start_url&utm_content=manifest_link",
+	"display": "standalone",
+	"background_color": "black",
+	"theme_color": "purple",
+	"description": "Website for viewing and buying Alexis' Art",
+	"categories": ["art", "business", "entertainment", "photo"],
+	"id": "57ab8dae-91e7-46e9-a7fc-14e3cbe5d7a1",
+	"orientation": "natural",
+	"protocol_handlers": [{
+		"protocol": "web+alexisart",
+		"url": "/art?search=%s"
+	}],
+	"icons": [{
+		"src": "images/100x.png",
+		"sizes": "100x100",
+		"type": "image/png"
+	}, {
+		"src": "images/600x.svg",
+		"sizes": "600x600",
+		"type": "image/svg+xml"
+	}, {
+		"src": "images/1200x.png",
+		"sizes": "1200x1200",
+		"type": "image/png"
+	}],
+	"share_target": {
+		"action": "/upload/",
+		"method": "POST",
+		"enctype": "multipart/form-data",
+		"params": {
+			"url": "link"
+		}
+	}
+}

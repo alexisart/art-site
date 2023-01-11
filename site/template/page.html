@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html moznomarginboxes mozdisallowselectionprint>
 	<head>
 		<meta charset="UTF-8" />
 		<meta name='viewport' content='width=device-width, initial-scale=1' />
@@ -8,9 +8,13 @@
 		<meta name="robots" content="noai, noimageai" />
 		
 		<!-- Stylesheets -->
+		<!-- https://www.w3.org/TR/CSS22/media.html#media-types -->
 		<link rel="stylesheet" media="screen" href="web.css" />
 		<link rel="stylesheet" media="print" href="print.css" />
 
+		<!-- Scripts -->
+		<script src="/scripts/jquery.js"></script>
+		
 		<!-- Manifest -->
 		<link rel="manifest" href="manifest.json" />
 		
@@ -22,6 +26,26 @@
 			gtag('js', new Date());
 			gtag('config', '{GOOGLE_ANALTICS_ID}');
 		</script>-->
+		
+		<!-- Testing Register Protocol Via Javascript -->
+		<!-- <script>navigator.registerProtocolHandler('web+alexisart', '/art?search=%s');</script> -->
+		<script type="text/javascript">
+			// Modified From: https://stackoverflow.com/a/25560771
+			// I may create a different solution as browser prompts mess with this
+			// Example: <a href="web+alexisart://test-link" data-href-alt="/art?search=test-link">Test Link</a>
+			$(document).ready(function() {
+				$("a[href*='web+alexisart://']").click(function(e) {
+					var el = $(this);
+					setTimeout(function() {
+						window.location = el.attr("data-href-alt");
+					}, 1000); // TODO: Determine If Need 2 Second Wait
+					
+					window.location = el.attr("href");
+
+					e.preventDefault();
+				});
+			});
+		</script>
 	</head>
 	<body>
 		{HTML_BODY}

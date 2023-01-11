@@ -1,12 +1,23 @@
+/* TODO: Determine Why Table Border Is Not Visible On Print Preview On Firefox. It is visible in final print though */
+/* TODO: Figure out how to put page numbers, margin on table splits, and repeat header row on table splits */
+
+/* Body */
 body {
 	background: white;
 }
 
+/* Table */
 table {
 	color: black;
 	border: 1px solid gray;
 	width: 100%;
 	border-collapse: collapse;
+	page-break-inside: auto;
+}
+
+tr {
+	page-break-inside: avoid;
+	page-break-after: auto;
 }
 
 tr.first { /* tr:has(> th) { */
@@ -31,8 +42,40 @@ td:last-of-type {
 	border-left: 1px dashed gray;
 }
 
+/* 404 Page */
+h1.notfoundheader {
+	color: black;
+}
+
+/* Links */
+a, a:visited {
+	text-decoration: underline;
+}
+
+a[href]:after {
+	content: ' (' attr(href) ')';
+}
+
+/* Images */
+img {
+/* 	filter: invert(100%) hue-rotate(180deg) brightness(120%) contrast(150%); */
+}
+
+/* https://www.w3.org/TR/CSS22/page.html
+body::after {
+  content: "Page " counter(page);
+  display: block;
+  text-align: center;
+}*/
+
 /* Print Specific CSS */
 @page {
 	size: auto;
-	margin: 0;
+	/*margin: 0;*/
+	margin-top: 20px;
+	margin-bottom: 0;
+}
+
+@top-right {
+	content: "Page " counter(page);
 }

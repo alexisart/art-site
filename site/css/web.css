@@ -30,3 +30,7 @@ td:not(:first-of-type, :last-of-type) {
 td:last-of-type {
 	border-left: 1px dashed red;
 }
+
+h1.notfoundheader {
+	color: white;
+}

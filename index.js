@@ -3,6 +3,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const process = require('process');
+const url = require('url');
 
 
 // Constants
@@ -25,22 +26,49 @@ var pool = mysql.createPool({
 
 const server = http.createServer((req, res) => {
     console.log('Request for ' + req.url + ' by method ' + req.method);
+	var path = url.parse(req.url).pathname;
 	
-	if (req.url == "/")
+	if (path == "/")
 		sendIndex(req, res);
-	else if (req.url == "/web.css")
-		sendFile(req, res, "web.css", "text/css", "css");
-	else if (req.url == "/print.css")
-		sendFile(req, res, "print.css", "text/css", "css");
-	else if (req.url == "/manifest.json")
-		sendFile(req, res, "manifest.json", "application/manifest+json", "manifests");
+	else if (path == "/web.css")
+		streamFile(req, res, "web.css", "text/css", "css");
+	else if (path == "/print.css")
+		streamFile(req, res, "print.css", "text/css", "css");
+	else if (path == "/scripts/jquery.js")
+		streamFile(req, res, "jquery-3.6.3.min.js", "application/javascript", "scripts");
+	else if (path == "/manifest.json")
+		streamFile(req, res, "manifest.json", "application/manifest+json", "manifests");
+	else if (path == "/images/100x.png")
+		streamFile(req, res, "100x.png", "image/png", "images");
+	else if (path == "/images/600x.svg")
+		streamFile(req, res, "600x.svg", "image/svg+xml", "images");
+	else if (path == "/images/1200x.png")
+		streamFile(req, res, "1200x.png", "image/png", "images");
 	else
 		send404(req, res);
 });
 
 
 // Functions
-function sendFile(req, res, file, mime, folder) {
+function streamFile(req, res, file, mime, folder) {
+	res.statusCode = 200;
+	res.setHeader('Content-Type', mime);
+// 	req.flushHeaders(); // Send headers out now
+	
+	stream = fs.createReadStream(path.join('site', folder, file));
+	
+	stream.on("data", function (chunk) {
+		res.write(chunk);
+	});
+
+	// Send the buffer or you can put it into a var
+	stream.on("end", function () {
+		res.end();
+	});
+}
+
+// Only to be used when reading whole file in at once (does not handle binary files well)
+/*function sendFile(req, res, file, mime, folder) {
 	res.statusCode = 200;
 	res.setHeader('Content-Type', mime);
 // 	req.flushHeaders(); // Send headers out now
@@ -59,7 +87,7 @@ function sendFile(req, res, file, mime, folder) {
 		res.write(body);
 		res.end();
 	});
-}
+}*/
 
 function sendPage(req, res, content) {
 // 	req.flushHeaders(); // Send headers out now
@@ -87,8 +115,7 @@ function send404(req, res) {
 	
 	
 	const content = [];
-	content.push("<h1 style='color: white;'>404 - Page Not Found</h1>");
-	content.push('test');
+	content.push("<h1 class='notfoundheader'>404 - Page Not Found</h1>");
 	
 	sendPage(req, res, content);
 }
