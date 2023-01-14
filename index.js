@@ -32,6 +32,8 @@ const server = http.createServer((req, res) => {
 	
 	if (path == "/")
 		sendIndex(req, res);
+	else if (path == "/editor")
+		streamFile(req, res, "editor.html", "text/html", "template");
 	else if (path == "/web.css")
 		streamFile(req, res, "web.css", "text/css", "css");
 	else if (path == "/print.css")
